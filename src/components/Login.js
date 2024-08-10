@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { storeData } from "../utils/storage";
 
 const Login = () => {
@@ -8,7 +8,7 @@ const Login = () => {
     password: "",
   });
   const [error, setError] = useState(null);
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -38,7 +38,7 @@ const Login = () => {
       console.log(data);
       storeData("userId", data?._id);
       storeData("email", data?.email);
-      //   navigate('/home');
+      navigate('/home');
     } catch (err) {
       setError(err.message);
     }
