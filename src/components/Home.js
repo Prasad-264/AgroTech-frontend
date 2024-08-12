@@ -1,44 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddFarmerModal from "./modal/AddFarmerModal";
 import { getData } from "../utils/storage";
+import Notification from "./Notification";
 
 const Home = () => {
-  const [farmers, setFarmers] = useState([
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      contactNumber: "9876543210",
-      address: "123 Farm Lane",
-      farm_type: "Dairy",
-      expense: "$5000",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      contactNumber: "8765432109",
-      address: "456 Country Road",
-      farm_type: "Vegetable",
-      expense: "$3000",
-    },
-    // Add more sample farmers if needed
-  ]);
+  const [farmers, setFarmers] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const userId = getData("userId");
-  console.log(userId);
-  
-  const handleEdit = (index) => {
-    console.log(`Edit farmer at index ${index}`);
+
+  const fetchFarmerData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:6001/api/farmer/${userId}/farmers`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setFarmers(data);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFarmerData();
+  }, [userId]);
+
+  const handleEdit = (farmerId) => {
+    console.log(`Edit farmer with id ${farmerId}`);
     // Implement edit functionality here
   };
 
-  const handleDelete = (index) => {
-    const updatedFarmers = farmers.filter((_, i) => i !== index);
-    setFarmers(updatedFarmers);
+  const handleDelete = async (farmerId) => {
+    try {
+      const response = await fetch(`http://localhost:6001/api/farmer/${userId}/${farmerId}/delete-farmer`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        console.log('farmer removed successfully');
+        setFarmers((prevFarmers) => prevFarmers.filter((farmer) => farmer._id !== farmerId));
+        setShowNotification(true);
+      } else {
+        console.error('Failed to remove farmar');
+      }
+    } catch (error) {
+      console.error("Failed to delete farmer:", error);
+    }
   };
+
+  const handleClose = () => {
+    setShowNotification(false);
+  }
+
+  if (error) return <div>Error..!!</div>;
+  if (loading) return <div>Loading..!!</div>;
 
   return (
     <div className="mx-auto p-6 bg-gradient-to-r from-sky-400 to-indigo-400 min-h-screen">
       <div className="flex justify-center">
-        <AddFarmerModal userId={userId} />
+        <AddFarmerModal userId={userId} onFarmerAdded={fetchFarmerData} />
       </div>
       <div className="overflow-scroll no-scrollbar rounded-lg shadow-lg">
         <table className="min-w-full bg-white text-left">
@@ -55,13 +84,13 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {farmers.map((farmer, index) => (
+            {farmers.map((farmer) => (
               <tr
-              key={index}
-              className="bg-white border-b hover:bg-gray-200 transition-colors"
+                key={farmer._id}
+                className="bg-white border-b hover:bg-gray-200 transition-colors"
               >
-                <td className="py-4 px-5"><b>{index}</b></td>
-                <td className="py-4 px-5"><b>{farmer.name}</b></td>
+                <td className="py-4 px-5"><b>{farmer._id}</b></td>
+                <td className="py-4 px-5">{farmer.name}</td>
                 <td className="py-4 px-5">{farmer.email}</td>
                 <td className="py-4 px-5">{farmer.contactNumber}</td>
                 <td className="py-4 px-5">{farmer.address}</td>
@@ -69,15 +98,15 @@ const Home = () => {
                 <td className="py-4 px-5">{farmer.expense}</td>
                 <td className="py-4 px-5 flex space-x-3">
                   <button
-                    onClick={() => handleEdit(index)}
+                    onClick={() => handleEdit(farmer._id)}
                     className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
-                    >
+                  >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(index)}
+                    onClick={() => handleDelete(farmer._id)}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-                    >
+                  >
                     Delete
                   </button>
                 </td>
@@ -86,6 +115,10 @@ const Home = () => {
           </tbody>
         </table>
       </div>
+      {showNotification && <Notification 
+        message={"Farmer deleted successfully"}
+        onClose={handleClose}
+      />}
     </div>
   );
 };

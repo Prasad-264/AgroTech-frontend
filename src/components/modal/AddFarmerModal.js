@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Notification from "../Notification";
 
-const AddFarmerModal = ({ userId }) => {
+const AddFarmerModal = ({ userId, onFarmerAdded }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -80,6 +80,7 @@ const AddFarmerModal = ({ userId }) => {
         const data = await response.json();
         console.log("Form submitted successfully", data);
         setSuccess(true);
+        onFarmerAdded();
         toggleModal();
       } catch (err) {
         setErrors(err.message);
