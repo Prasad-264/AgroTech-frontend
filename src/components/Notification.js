@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 const Notification = ({ message, onClose }) => {
   const [visible, setVisible] = useState(false);
-	console.log("In notification");
 	
   useEffect(() => {
     setVisible(true);
