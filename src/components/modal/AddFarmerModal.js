@@ -80,7 +80,7 @@ const AddFarmerModal = ({ userId, onFarmerAdded }) => {
         const data = await response.json();
         console.log("Form submitted successfully", data);
         setSuccess(true);
-        onFarmerAdded();
+        // onFarmerAdded();
         toggleModal();
       } catch (err) {
         setErrors(err.message);
@@ -97,6 +97,7 @@ const AddFarmerModal = ({ userId, onFarmerAdded }) => {
 
   const handleClose = () => {
     setSuccess(false);
+    onFarmerAdded();
   }
 
   return (
