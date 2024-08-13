@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import Notification from "../Notification";
+/* eslint-disable */
+import React, { useState, useEffect } from "react";
 
-const AddFarmerModal = ({ userId, onFarmerAdded }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const AddFarmerModal = ({ isOpen, onClose, isEdit = false, farmerData = {}, onSubmit }) => {
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -10,12 +9,27 @@ const AddFarmerModal = ({ userId, onFarmerAdded }) => {
     email: "",
     farm_type: "",
   });
-  const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState(false);
+  useEffect(() => {
+    if (isEdit && farmerData) {
+      setFormData({
+        name: farmerData.name,
+        address: farmerData.address,
+        contactNumber: farmerData.contactNumber,
+        email: farmerData.email,
+        farm_type: farmerData.farm_type,      
+      });      
+    } else {
+      setFormData({
+        name: "",
+        address: "",
+        contactNumber: "",
+        email: "",
+        farm_type: "",
+      })
+    }
+  }, [isEdit]);
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
+  const [errors, setErrors] = useState({});
 
   const validate = () => {
     let tempErrors = {};
@@ -59,35 +73,6 @@ const AddFarmerModal = ({ userId, onFarmerAdded }) => {
     return valid;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (validate()) {
-      setSuccess(false);
-      try {
-        const response = await fetch(`http://localhost:6001/api/farmer/${userId}/add-farmer`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        if (!response.ok) {
-          throw new Error("Failed to add farmer");
-        }
-  
-        const data = await response.json();
-        console.log("Form submitted successfully", data);
-        setSuccess(true);
-        // onFarmerAdded();
-        toggleModal();
-      } catch (err) {
-        setErrors(err.message);
-      }
-    }
-  };
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -95,23 +80,20 @@ const AddFarmerModal = ({ userId, onFarmerAdded }) => {
     });
   };
 
-  const handleClose = () => {
-    setSuccess(false);
-    onFarmerAdded();
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      onSubmit(formData);
+      onClose();
+    }
+};
 
   return (
     <div>
-      <button 
-        onClick={toggleModal}
-        className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-      >
-        Add Farmer
-      </button>
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-2xl font-semibold mb-4">Add Farmer</h2>
+            <h2 className="text-2xl font-semibold mb-4">{isEdit ? 'Edit Farmer' : 'Add New Farmer'}</h2>
             <form onSubmit={handleSubmit} noValidate>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Name</label>
@@ -211,7 +193,7 @@ const AddFarmerModal = ({ userId, onFarmerAdded }) => {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={toggleModal}
+                  onClick={onClose}
                   className="bg-gray-500 text-white px-4 py-2 rounded-md mr-2"
                 >
                   Cancel
@@ -227,10 +209,6 @@ const AddFarmerModal = ({ userId, onFarmerAdded }) => {
           </div>
         </div>
       )}
-      {success && <Notification 
-        message={"Farmer added successfully!"}
-        onClose={handleClose}
-      />}
     </div>
   );
 };
