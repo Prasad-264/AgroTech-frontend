@@ -202,7 +202,7 @@ const AddFarmerModal = ({ isOpen, onClose, isEdit = false, farmerData = {}, onSu
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded-md"
                 >
-                  Submit
+                  {isEdit ? 'Save Changes' : 'Submit'}
                 </button>
               </div>
             </form>
