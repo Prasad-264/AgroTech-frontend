@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import AddFarmerModal from "./modal/AddFarmerModal";
 import { getData } from "../utils/storage";
 import Notification from "./Notification";
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [farmers, setFarmers] = useState([]);
@@ -14,6 +15,7 @@ const Home = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const userId = getData("userId");
+  const navigate = useNavigate();
 
   const fetchFarmerData = async () => {
     setLoading(true);
@@ -120,6 +122,10 @@ const Home = () => {
     }
   };
 
+  const handleCrop = (farmerId) => {
+    navigate(`/crop/${farmerId}`);
+  };
+
   const toggleAddModal = () => {
     setIsAddModalOpen(!isAddModalOpen);
   };
@@ -156,7 +162,7 @@ const Home = () => {
               <th className="py-3 px-5">Mobile Number</th>
               <th className="py-3 px-5">Address</th>
               <th className="py-3 px-5">Farm Type</th>
-              <th className="py-3 px-5">Expense</th>
+              <th className="py-3 px-5">Crops</th>
               <th className="py-3 px-5">Action</th>
             </tr>
           </thead>
@@ -174,7 +180,14 @@ const Home = () => {
                 <td className="py-4 px-5">{farmer.contactNumber}</td>
                 <td className="py-4 px-5">{farmer.address}</td>
                 <td className="py-4 px-5">{farmer.farm_type}</td>
-                <td className="py-4 px-5">{farmer.expense}</td>
+                <td className="py-4 px-5">
+                  <button
+                    onClick={() => handleCrop(farmer._id)}
+                    className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition"
+                  >
+                    Manage Crop
+                  </button>
+                </td>
                 <td className="py-4 px-5 flex space-x-3">
                   <button
                     onClick={() => toggleEditModal(farmer)}
