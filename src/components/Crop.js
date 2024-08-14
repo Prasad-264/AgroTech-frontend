@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import FarmerDetails from "./FarmerDetails";
 import Notification from "./Notification";
+import CropModal from "./modal/CropModal";
 
 const Crop = () => {
   const { farmerId } = useParams();
@@ -10,6 +11,9 @@ const Crop = () => {
   const [crops, setCrops] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
+	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCrop, setSelectedCrop] = useState(null);
 
   useEffect(() => {
     fetchCrops();
@@ -36,6 +40,59 @@ const Crop = () => {
     }
   };
 
+	const handleAddCrop = async (newCrop) => {
+		try {
+      const response = await fetch(
+        `http://localhost:6001/api/crop/${farmerId}/add-crop`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newCrop),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to add crop");
+      }
+
+      fetchCrops();
+      setIsAddModalOpen(false);
+      setShowNotification(true);
+      setNotificationMessage("Crop Added Successfully!");
+    } catch (error) {
+      console.error("Failed to add new crop:", error);
+    }
+	}
+
+	const handleEditCrop = async (updatedCrop) => {
+		try {
+      const response = await fetch(
+        `http://localhost:6001/api/crop/${selectedCrop?._id}/update-crop`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedCrop),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update crop");
+      }
+      const editedCrop = await response.json();
+
+      const updatedCrops = crops.map((crop) =>
+        crop._id === editedCrop?.crop?._id ? editedCrop?.crop : crop
+      );
+
+      setCrops(updatedCrops);
+      setIsEditModalOpen(false);
+      setSelectedCrop(null);
+      setShowNotification(true);
+      setNotificationMessage("Crop Updated Successfully!");
+    } catch (error) {
+      console.error("Failed to update crop:", error);
+    }
+	}
+
   const handleDelete = async (cropId) => {
     try {
       const response = await fetch(
@@ -61,6 +118,15 @@ const Crop = () => {
     }
   };
 
+	const toggleAddModal = () => {
+    setIsAddModalOpen(!isAddModalOpen);
+  };
+
+	const toggleEditModal = (crop) => {
+    setSelectedCrop(crop);		
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
   const handleClose = () => {
     setShowNotification(false);
   };
@@ -76,7 +142,7 @@ const Crop = () => {
       <FarmerDetails farmerId={farmerId} />
       <div className="flex justify-center m-4">
         <button
-          // onClick={toggleAddModal}
+          onClick={toggleAddModal}
           className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2"
         >
           Add Crop
@@ -118,7 +184,7 @@ const Crop = () => {
                 </td>
                 <td className="py-4 px-5 flex space-x-3">
                   <button
-                    // onClick={() => toggleEditModal(crop)}
+                    onClick={() => toggleEditModal(crop)}
                     className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
                   >
                     Edit
@@ -135,24 +201,27 @@ const Crop = () => {
           </tbody>
         </table>
 
-        {/* <AddCropModal
+        <CropModal
           isOpen={isAddModalOpen}
           onClose={toggleAddModal}
           onSubmit={handleAddCrop}
         />
 
-        {selectedFarmer && (
-          <AddCropModal
+        {selectedCrop && (
+          <CropModal
             isOpen={isEditModalOpen}
             onClose={() => toggleEditModal(null)}
             isEdit={true}
-            farmerData={selectedCrop}
+            cropData={selectedCrop}
             onSubmit={handleEditCrop}
           />
-        )} */}
+        )}
       </div>
       {showNotification && (
-        <Notification message={notificationMessage} onClose={handleClose} />
+        <Notification 
+					message={notificationMessage} 
+					onClose={handleClose} 
+				/>
       )}
     </div>
   );
