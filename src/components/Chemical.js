@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import CropDetails from './CropDetails';
+import Fertilizer from './Fertilizer';
 
 const Chemical = () => {
   const { cropId } = useParams();
@@ -14,6 +15,7 @@ const Chemical = () => {
       <h1 className="text-3xl font-semibold text-gray-800 text-center m-4">
         Manage fertilizers and pesticides for this crop
       </h1>
+      <Fertilizer cropId={cropId} />
     </div>
   )
 }
