@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Crop from "./components/Crop";
+import Chemical from "./components/Chemical";
 
 function App() {
   const location = useLocation();
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/crop/:farmerId" element={<Crop />} />
+          <Route path="/chemical/:cropId" element={<Chemical />} />
         </Routes>
       </div> 
     </>

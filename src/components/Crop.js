@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import FarmerDetails from "./FarmerDetails";
 import Notification from "./Notification";
 import CropModal from "./modal/CropModal";
@@ -14,6 +14,7 @@ const Crop = () => {
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCrops();
@@ -131,6 +132,10 @@ const Crop = () => {
     setShowNotification(false);
   };
 
+  const handleChemicals = (cropId) => {
+    navigate(`/chemical/${cropId}`);
+  }
+
   if (error) return <div>Error..!!</div>;
   if (loading) return <div>Loading..!!</div>;
 
@@ -176,7 +181,7 @@ const Crop = () => {
                 <td className="py-4 px-5">{0}</td>
                 <td className="py-4 px-5">
                   <button
-                    // onClick={() => handleCrop(crop._id)}
+                    onClick={() => handleChemicals(crop._id)}
                     className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition"
                   >
                     Manage
