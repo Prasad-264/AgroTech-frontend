@@ -32,8 +32,28 @@ const Crop = () => {
           },
         }
       );
-      const data = await response.json();
-      setCrops(data);
+      const crops = await response.json();
+  
+      // Fetch cost for each crop
+      const cropsWithCost = await Promise.all(
+        crops?.map(async (crop) => {
+          const costResponse = await fetch(
+            `http://localhost:6001/api/crop/${crop._id}/get-cropcost`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const totalCost = await costResponse.json();
+          return {
+            ...crop,
+            totalCost,
+          };
+        })
+      );
+      setCrops(cropsWithCost);
       setLoading(false);
     } catch (error) {
       setError(error);
@@ -178,7 +198,7 @@ const Crop = () => {
                 <td className="py-4 px-5">{crop.cropName}</td>
                 <td className="py-4 px-5">{crop.category}</td>
                 <td className="py-4 px-5">{crop.season}</td>
-                <td className="py-4 px-5">{0}</td>
+                <td className="py-4 px-5">₹ {crop?.totalCost?.cost}</td>
                 <td className="py-4 px-5">
                   <button
                     onClick={() => handleChemicals(crop._id)}
