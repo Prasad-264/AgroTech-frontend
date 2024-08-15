@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 
-const ChemicalModal = ({ isOpen, onClose, isEdit = false, chemicalData = {}, onSubmit }) => {
+const ChemicalModal = ({ isOpen, onClose, isEdit = false, chemicalData = {}, onSubmit, isPesticide= false }) => {
   const [formData, setFormData] = useState({
     name: "",
     manufacturer: "",
@@ -84,7 +84,15 @@ const ChemicalModal = ({ isOpen, onClose, isEdit = false, chemicalData = {}, onS
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-2xl font-semibold mb-4">{isEdit ? 'Edit Fertilizer' : 'Add New Fertilizer'}</h2>
+            {isPesticide ? (
+              <h2 className="text-2xl font-semibold mb-4">
+                {isEdit ? "Edit Pesticide" : "Add New Pesticide"}
+              </h2>
+            ) : (
+              <h2 className="text-2xl font-semibold mb-4">
+                {isEdit ? "Edit Fertilizer" : "Add New Fertilizer"}
+              </h2>
+            )}
             <form onSubmit={handleSubmit} noValidate>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Name</label>
@@ -118,7 +126,9 @@ const ChemicalModal = ({ isOpen, onClose, isEdit = false, chemicalData = {}, onS
                   }`}
                 />
                 {errors.manufacturer && (
-                  <p className="text-red-500 text-sm mt-1">{errors.manufacturer}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.manufacturer}
+                  </p>
                 )}
               </div>
 
@@ -142,9 +152,7 @@ const ChemicalModal = ({ isOpen, onClose, isEdit = false, chemicalData = {}, onS
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
-                  Cost
-                </label>
+                <label className="block text-sm font-medium mb-1">Cost</label>
                 <input
                   type="number"
                   name="cost"
@@ -175,7 +183,9 @@ const ChemicalModal = ({ isOpen, onClose, isEdit = false, chemicalData = {}, onS
                   }`}
                 />
                 {errors.description && (
-                  <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.description}
+                  </p>
                 )}
               </div>
 
@@ -191,7 +201,7 @@ const ChemicalModal = ({ isOpen, onClose, isEdit = false, chemicalData = {}, onS
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded-md"
                 >
-                  {isEdit ? 'Save Changes' : 'Submit'}
+                  {isEdit ? "Save Changes" : "Submit"}
                 </button>
               </div>
             </form>
