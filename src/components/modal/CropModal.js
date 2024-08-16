@@ -6,6 +6,8 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
     cropName: "",
     season: "",
     category: "",
+    seedCost: "",
+    laborCost: "",
   });
   useEffect(() => {
     if (isEdit && cropData) {
@@ -13,12 +15,16 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
         cropName: cropData.cropName,
         season: cropData.season,
         category: cropData.category,    
+        seedCost: cropData.seedCost,
+        laborCost: cropData.laborCost,
       });      
     } else {
       setFormData({
         cropName: "",
         season: "",
         category: "",
+        seedCost: "",
+        laborCost: "",
       })
     }
   }, [isEdit]);
@@ -50,6 +56,16 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
       valid = false;
     } else if (!/^[a-zA-Z\s]+$/.test(formData.category)) {
       tempErrors.category = "category must contain only letters and spaces";
+      valid = false;
+    }
+
+    if (!formData.seedCost) {
+      tempErrors.seedCost = "seed cost is required";
+      valid = false;
+    }
+
+    if (!formData.laborCost) {
+      tempErrors.laborCost = "labor cost is required";
       valid = false;
     }
 
@@ -132,6 +148,46 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
                 {errors.category && (
                   <p className="text-red-500 text-sm mt-1">{errors.category}</p>
                 )}
+              </div>
+
+              <div className="flex space-x-5">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">
+                    Seed Price
+                  </label>
+                  <input
+                    type="number"
+                    name="seedCost"
+                    value={formData.seedCost}
+                    onChange={handleChange}
+                    placeholder="Enter seed price"
+                    className={`w-full p-2 border rounded-md ${
+                      errors.seedCost ? "border-red-500" : "border-gray-300"
+                    }`}
+                  />
+                  {errors.seedCost && ( 
+                    <p className="text-red-500 text-sm mt-1">{errors.seedCost}</p>
+                  )}
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">
+                    Labor Cost
+                  </label>
+                  <input
+                    type="number"
+                    name="laborCost"
+                    value={formData.laborCost}
+                    onChange={handleChange}
+                    placeholder="Enter labor cost"
+                    className={`w-full p-2 border rounded-md ${
+                      errors.laborCost ? "border-red-500" : "border-gray-300"
+                    }`}
+                  />
+                  {errors.laborCost && ( 
+                    <p className="text-red-500 text-sm mt-1">{errors.laborCost}</p>
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-end">
