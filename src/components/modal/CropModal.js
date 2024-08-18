@@ -113,19 +113,22 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
-                  Season
-                </label>
-                <input
-                  type="text"
+                <label className="block text-sm font-medium mb-1">Season</label>
+                <select
                   name="season"
                   value={formData.season}
                   onChange={handleChange}
-                  placeholder="Enter season"
                   className={`w-full p-2 border rounded-md ${
                     errors.season ? "border-red-500" : "border-gray-300"
                   }`}
-                />
+                >
+                  <option value="">Select season</option>
+                  <option value="kharif">Kharif</option>
+                  <option value="rabi">Rabi</option>
+                  <option value="summer">Summer</option>
+                  <option value="autumn">Autumn</option>
+                  <option value="spring">Spring</option>
+                </select>
                 {errors.season && (
                   <p className="text-red-500 text-sm mt-1">{errors.season}</p>
                 )}
@@ -135,16 +138,25 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
                 <label className="block text-sm font-medium mb-1">
                   Category
                 </label>
-                <input
-                  type="text"
+                <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  placeholder="Enter crop category"
                   className={`w-full p-2 border rounded-md ${
                     errors.category ? "border-red-500" : "border-gray-300"
                   }`}
-                />
+                >
+                  <option value="">Select crop category</option>
+                  <option value="Cereals">Cereals</option>
+                  <option value="Pulses">Pulses</option>
+                  <option value="Oilseeds">Oilseeds</option>
+                  <option value="Fruits">Fruits</option>
+                  <option value="Vegetables">Vegetables</option>
+                  <option value="Spices">Spices</option>
+                  <option value="Commercial Crops">
+                    Commercial Crops (like Cotton, Sugarcane, etc.)
+                  </option>
+                </select>
                 {errors.category && (
                   <p className="text-red-500 text-sm mt-1">{errors.category}</p>
                 )}
@@ -165,7 +177,7 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
                       errors.seedCost ? "border-red-500" : "border-gray-300"
                     }`}
                   />
-                  {errors.seedCost && ( 
+                  {errors.seedCost && (
                     <p className="text-red-500 text-sm mt-1">{errors.seedCost}</p>
                   )}
                 </div>
@@ -184,7 +196,7 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
                       errors.laborCost ? "border-red-500" : "border-gray-300"
                     }`}
                   />
-                  {errors.laborCost && ( 
+                  {errors.laborCost && (
                     <p className="text-red-500 text-sm mt-1">{errors.laborCost}</p>
                   )}
                 </div>
