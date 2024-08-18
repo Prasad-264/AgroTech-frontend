@@ -46,16 +46,10 @@ const CropModal = ({ isOpen, onClose, isEdit = false, cropData = {}, onSubmit })
     if (!formData.season) {
       tempErrors.season = "season is required";
       valid = false;
-    } else if (!/^[a-zA-Z\s]+$/.test(formData.season)) {
-      tempErrors.season = "season must contain only letters and spaces";
-      valid = false;
     }
 
     if (!formData.category) {
       tempErrors.category = "category is required";
-      valid = false;
-    } else if (!/^[a-zA-Z\s]+$/.test(formData.category)) {
-      tempErrors.category = "category must contain only letters and spaces";
       valid = false;
     }
 
