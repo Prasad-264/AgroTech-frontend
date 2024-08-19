@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import FarmerDetails from "./FarmerDetails";
 import Notification from "./Notification";
 import CropModal from "./modal/CropModal";
+import Loader from "../utils/Loader";
 
 const Crop = () => {
   const { farmerId } = useParams();
@@ -156,8 +157,12 @@ const Crop = () => {
     navigate(`/chemical/${cropId}`);
   }
 
+  const handleSell = (cropId) => {
+    navigate(`/sell/${cropId}`);
+  }
+
   if (error) return <div>Error..!!</div>;
-  if (loading) return <div>Loading..!!</div>;
+  if (loading) return <Loader /> ;
 
   return (
     <div className="mx-auto px-6 bg-white">
@@ -183,6 +188,7 @@ const Crop = () => {
               <th className="py-3 px-5">Season</th>
               <th className="py-3 px-5">Expense</th>
               <th className="py-3 px-5">Agrochemicals</th>
+              <th className="py-3 px-5">Sell</th>
               <th className="py-3 px-5">Action</th>
             </tr>
           </thead>
@@ -205,6 +211,14 @@ const Crop = () => {
                     className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition"
                   >
                     Manage
+                  </button>
+                </td>
+                <td className="py-4 px-5">
+                  <button
+                    onClick={() => handleSell(crop._id)}
+                    className="bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition"
+                  >
+                    Sell
                   </button>
                 </td>
                 <td className="py-4 px-5 flex space-x-3">
