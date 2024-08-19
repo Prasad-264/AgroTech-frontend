@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Loader from '../utils/Loader';
 
 const FarmerDetails = ({ farmerId }) => {
   const [farmer, setFarmer] = useState({});
@@ -31,7 +32,7 @@ const FarmerDetails = ({ farmerId }) => {
   };
 
   if (error) return <div>Error..!!</div>;
-  if (loading) return <div>Loading..!!</div>;
+  if (loading) return <Loader />;
   return (
     <div className="mx-auto max-w-5xl px-8 py-6 flex flex-row space-x-4 justify-between items-center shadow-lg rounded-lg overflow-hidden bg-gradient-to-r from-green-200 to-blue-200 hover:from-green-300 hover:to-blue-300">
       <div className="flex items-center gap-4">
