@@ -6,6 +6,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Crop from "./components/Crop";
 import Chemical from "./components/Chemical";
+import Sell from "./components/Sell";
 
 function App() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/crop/:farmerId" element={<Crop />} />
           <Route path="/chemical/:cropId" element={<Chemical />} />
+          <Route path="/sell/:cropId" element={<Sell />} />
         </Routes>
       </div> 
     </>
