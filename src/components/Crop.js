@@ -188,7 +188,7 @@ const Crop = () => {
               <th className="py-3 px-5">Season</th>
               <th className="py-3 px-5">Expense</th>
               <th className="py-3 px-5">Agrochemicals</th>
-              <th className="py-3 px-5">Sell</th>
+              <th className="py-3 px-5">Sell Crop</th>
               <th className="py-3 px-5">Action</th>
             </tr>
           </thead>

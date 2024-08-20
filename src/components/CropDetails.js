@@ -18,8 +18,20 @@ const CropDetails = ({ cropId }) => {
             },
           }
         );
+        
         const data = await response.json();
-        setCrop(data);
+
+        const costResponse = await fetch(
+          `http://localhost:6001/api/crop/${cropId}/get-cropcost`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const totalCost = await costResponse.json();        
+        setCrop({...data, totalCost});
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -47,6 +59,10 @@ const CropDetails = ({ cropId }) => {
       <div className="text-gray-700">
         <p className="font-semibold text-center text-gray-800">Category</p>
         <p className="text-center text-lg">{crop?.category}</p>
+      </div>
+      <div className="text-gray-700">
+        <p className="font-semibold text-center text-gray-800">Total Expense</p>
+        <p className="text-center text-lg">₹ {crop?.totalCost?.cost}</p>
       </div>
     </div>
   )
