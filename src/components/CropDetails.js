@@ -1,6 +1,6 @@
 import React,{ useState, useEffect } from 'react'
 
-const CropDetails = ({ cropId }) => {
+const CropDetails = ({ cropId, expense = 0 }) => {
   const [crop, setCrop] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -32,6 +32,7 @@ const CropDetails = ({ cropId }) => {
         );
         const totalCost = await costResponse.json();        
         setCrop({...data, totalCost});
+        if (expense) expense(totalCost?.cost);
         setLoading(false);
       } catch (error) {
         setError(error);
