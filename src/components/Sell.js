@@ -14,6 +14,7 @@ const Sell = () => {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [avgPricePerUnit, setAvgPricePerUnit] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalExpense, setTotalExpense] = useState(0);
 
   useEffect(() => {
     fetchTransactions();
@@ -80,11 +81,11 @@ const Sell = () => {
 
   if (error) return <div>Error..!!</div>;
   if (loading) return <Loader />;
-
+  
   return (
     <div className="mx-auto px-6 bg-white">
       <div className="py-4">
-        <CropDetails cropId={cropId} />
+        <CropDetails cropId={cropId} expense={setTotalExpense}/>
       </div>
       <h1 className="text-4xl font-bold text-gray-900 text-center m-4">
         Financial Summary
@@ -103,8 +104,8 @@ const Sell = () => {
             <tr>
               <th className="py-3 px-5">Sale Id</th>
               <th className="py-3 px-5">Date</th>
-              <th className="py-3 px-5">Quantity sold</th>
-              <th className="py-3 px-5">Price per unit</th>
+              <th className="py-3 px-5">Quantity Sold</th>
+              <th className="py-3 px-5">Price Per Unit</th>
               <th className="py-3 px-5">Revenue</th>
             </tr>
           </thead>
@@ -138,6 +139,11 @@ const Sell = () => {
           onClose={toggleSell}
           onSubmit={handleSellCrop}
         />        
+      </div>
+      <div className="mx-auto max-w-sm p-4 my-4 text-center">
+        <button className={`text-lg font-semibold hover:text-white border focus:ring-4 focus:outline-none rounded-lg px-5 py-2.5 text-center me-2 mb-2 ${totalRevenue - totalExpense >= 0 ? 'text-green-700 border-green-700 hover:bg-green-800 ' : 'text-red-700 border-red-700 hover:bg-red-800 '}`}>
+          Overall Profit ₹ {totalRevenue - totalExpense}
+        </button>
       </div>
     </div>
   );
