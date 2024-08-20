@@ -204,7 +204,7 @@ const Crop = () => {
                 <td className="py-4 px-5">{crop.cropName}</td>
                 <td className="py-4 px-5">{crop.category}</td>
                 <td className="py-4 px-5">{crop.season}</td>
-                <td className="py-4 px-5">₹ {crop?.totalCost?.cost}</td>
+                <td className="py-4 px-5">₹ {crop?.totalCost?.cost || 0}</td>
                 <td className="py-4 px-5">
                   <button
                     onClick={() => handleChemicals(crop._id)}
